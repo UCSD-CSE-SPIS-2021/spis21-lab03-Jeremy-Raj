@@ -1,3 +1,6 @@
+# Jeremy Nguyen and Raj Sunku
+# Irma.py creates a map of Hurricane Irma and traces the route it will take, while also categorizing and coloring its path
+
 import turtle
 import csv
 
@@ -59,6 +62,11 @@ def irma():
         #(https://docs.python.org/3/library/functions.html#next)
         # pointreader is an iterator
 
+        t.pencolor("white")
+        t.penup()
+        t.speed(1)
+        firstInstance = True
+
         for row in pointreader:
             # row is a list representing each line in the csv file
             # Each comma separated element is in its own index position
@@ -68,8 +76,22 @@ def irma():
             # Then, you'll need to change this code
             print("Date:", row[0], "Time:", row[1])
 
+            # ensures the first row of labels is ignored
+            if(not firstInstance):
+                print(row)
 
+                # converts the meaningful data into floats
+                longitude = float(row[2])
+                latitude = float(row[3])
+                windSpeed = float(row[4])
+                category = categorizer(windSpeed, t)
 
+                # draws the path the hurricane takes 
+                t.goto(latitude, longitude)
+                t.write(str(category))
+                t.pendown()
+
+            firstInstance = False
     # Hack to make sure a reference to the background image stays around
     # Do not remove or change this line
     return map_bg_img
@@ -77,6 +99,33 @@ def irma():
 
 # Feel free to add "helper" functions here
 
+def categorizer(windSpeed, t):
+    """This method returns the category based on the wind speed and changes the state of the turtle based on the category"""
+
+    if windSpeed < 74:
+        t.pensize(1)
+        t.pencolor("white")
+        return 0
+    elif windSpeed < 96:
+        t.pensize(4)
+        t.pencolor("blue")
+        return 1
+    elif windSpeed < 111:
+        t.pensize(6)
+        t.pencolor("green")
+        return 2
+    elif windSpeed < 130:
+        t.pensize(8)
+        t.pencolor("yellow")
+        return 3
+    elif windSpeed < 157:
+        t.pensize(10)
+        t.pencolor("orange")
+        return 4
+    else:
+        t.pensize(12)
+        t.pencolor("red")
+        return 5
 
 if __name__ == "__main__":
     bg=irma()
